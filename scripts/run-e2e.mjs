@@ -44,7 +44,7 @@ async function runE2E() {
   });
 
   const context = await browser.newContext({
-    viewport: { width: 1280, height: 800 },
+    viewport: { width: 1280, height: 860 },
   });
   const page = await context.newPage();
 
@@ -56,15 +56,20 @@ async function runE2E() {
   });
 
   try {
-    // 1. Visit Catalog
-    console.log('📸 Step 1: Navigating to Catalog & capturing R1_navbar and R2_catalog...');
+    // 1. Visit Homepage & capture R1_navbar (Hero + Frosted Glass Header)
+    console.log('📸 Step 1: Navigating to Homepage & capturing R1_navbar...');
     await page.goto('http://localhost:4173', { waitUntil: 'networkidle' });
     await wait(800);
     await page.screenshot({ path: path.join('captures', 'R1_navbar.png') });
+
+    // 2. Scroll to Catalog Grid & capture R2_catalog (Product Cards + Stacked Badges)
+    console.log('📸 Step 2: Scrolling to Catalog Grid & capturing R2_catalog...');
+    await page.evaluate(() => window.scrollTo({ top: 380, behavior: 'instant' }));
+    await wait(500);
     await page.screenshot({ path: path.join('captures', 'R2_catalog.png') });
 
-    // 2. Open Product Detail Modal on a Used Item
-    console.log('📸 Step 2: Opening used equipment details & capturing R3_product_modal...');
+    // 3. Open Product Detail Modal on a Used Item & capture R3_product_modal
+    console.log('📸 Step 3: Opening used equipment details & capturing R3_product_modal...');
     const firstUsedCard = page.locator('article[data-testid^="equipment-card-"]').first();
     await firstUsedCard.click();
     await page.waitForSelector('[data-testid="product-detail-modal"]', { timeout: 5000 });
@@ -75,22 +80,23 @@ async function runE2E() {
     await page.click('[data-testid="btn-close-detail-modal"]');
     await wait(400);
 
-    // 3. Navigate to Sell Portal
-    console.log('📸 Step 3: Navigating to Sell Portal & capturing R4_sell_portal...');
+    // 4. Navigate to Sell Portal & capture R4_sell_portal
+    console.log('📸 Step 4: Navigating to Sell Portal & capturing R4_sell_portal...');
+    await page.evaluate(() => window.scrollTo(0, 0));
     await page.click('[data-testid="tab-sell"]');
     await page.waitForSelector('[data-testid="sell-portal"]', { timeout: 5000 });
     await wait(600);
     await page.screenshot({ path: path.join('captures', 'R4_sell_portal.png') });
 
-    // 4. Navigate to Gym Space Matcher
-    console.log('📸 Step 4: Navigating to Space Matcher & capturing R5_space_matcher...');
+    // 5. Navigate to Gym Space Matcher & capture R5_space_matcher
+    console.log('📸 Step 5: Navigating to Space Matcher & capturing R5_space_matcher...');
     await page.click('[data-testid="tab-space-matcher"]');
     await page.waitForSelector('[data-testid="gym-space-matcher"]', { timeout: 5000 });
     await wait(600);
     await page.screenshot({ path: path.join('captures', 'R5_space_matcher.png') });
 
-    // 5. Add to Cart & Checkout Simulation
-    console.log('📸 Step 5: Adding item to cart & capturing R6_cart_checkout...');
+    // 6. Add to Cart & Checkout Simulation & capture R6_cart_checkout
+    console.log('📸 Step 6: Adding item to cart & capturing R6_cart_checkout...');
     await page.click('[data-testid="tab-catalog"]');
     await wait(400);
     const quickAddBtn = page.locator('button[data-testid^="btn-quick-add-"]').first();
@@ -99,7 +105,29 @@ async function runE2E() {
     await wait(600);
     await page.screenshot({ path: path.join('captures', 'R6_cart_checkout.png') });
 
-    console.log('✅ All non-headless user journey steps completed successfully!');
+    // Close cart drawer if open by clicking backdrop or close button
+    const closeCartBtn = page.locator('[data-testid="btn-close-cart"]');
+    if (await closeCartBtn.count()) {
+      await closeCartBtn.click();
+    } else {
+      await page.keyboard.press('Escape');
+      await page.mouse.click(50, 50);
+    }
+    await wait(400);
+
+    // 7. Activate SeikoClaw break-ui Worst Case Stress Mode & capture R7_break_ui_stress
+    console.log('📸 Step 7: Activating break-ui Worst Case toggle & capturing R7_break_ui_stress...');
+    await page.click('[data-testid="break-ui-mode-worst"]');
+    await wait(400);
+    await page.evaluate(() => window.scrollTo({ top: 380, behavior: 'instant' }));
+    await wait(600);
+    await page.screenshot({ path: path.join('captures', 'R7_break_ui_stress.png') });
+
+    // Reset back to Demo data
+    await page.click('[data-testid="break-ui-mode-demo"]');
+    await wait(200);
+
+    console.log('✅ All non-headless user journey & break-ui stress steps completed!');
     if (consoleErrors.length > 0) {
       console.warn('⚠️ Console errors noticed:', consoleErrors);
     } else {

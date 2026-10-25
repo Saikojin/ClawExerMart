@@ -112,3 +112,13 @@
   - **Edits**: `docs/WORKFLOW_LOG.md`, git commit stack, push to origin/feat branch.
   - **Verification**: `git status` clean, git log clean.
   - **Artifact**: Complete end-of-task summary with thought process reflection.
+
+- [x] **Task 13: Adversarial `break-ui` Stress Audit, Badge Overlap Fix & CI Pipeline**
+  - **Edits**: `src/data/mockEquipment.ts`, `src/components/BreakUiToggle.tsx`, `src/components/EquipmentCard.tsx`, `src/components/Badge.tsx`, `src/components/Catalog.tsx`, `src/components/ProductDetailModal.tsx`, `src/components/GymSpaceMatcher.tsx`, `src/App.tsx`, `src/test/BreakUi.test.tsx`, `.github/workflows/ci.yml`, `scripts/run-e2e.mjs`, `README.md`, `docs/WORKFLOW_LOG.md`
+  - **Verification**: `npm test && npm run build && node scripts/run-e2e.mjs`
+  - **[E2E_CONTRACT] (Non-Headless)**:
+    - **Launch**: `node scripts/run-e2e.mjs`
+    - **User Journey**: 1. Scroll to catalog grid and verify top-left condition and savings badges stack vertically without colliding with top-right inspection score badge. 2. Switch bottom-center `break-ui` toggle to `Worst case` (`?data=worst`). 3. Verify `$24,995` and `$129,999` commercial lots render under `$5,000+` ceiling, broken image URL renders `Verified Equipment Photo Pending` fallback, and 145-char titles and compound city names clamp cleanly.
+    - **Observable Done-When**: All 23 unit/component tests pass, Vite production build succeeds, and non-headless Chrome captures `captures/R2_catalog.png` and `captures/R7_break_ui_stress.png` with zero visual overlap.
+    - **Artifact**: `captures/R2_catalog.png`, `captures/R7_break_ui_stress.png`, `src/test/BreakUi.test.tsx`
+  - **[GATE: VISUAL_CRITIC]**: Certified (0 punch items).

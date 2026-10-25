@@ -738,3 +738,207 @@ export const MOCK_EQUIPMENT: EquipmentItem[] = [
     description: 'The most durable adjustable dumbbells in the industry. Made of solid steel and cast iron with zero plastic components. Can be safely dropped on heavy mats without fear of shattering.',
   }
 ];
+
+
+export type DatasetMode = 'demo' | 'worst' | 'single' | 'empty';
+
+/**
+ * Adversarial worst-case dataset generated via the SeikoClaw `break-ui` skill.
+ * Tests extreme realistic values across every rendered field:
+ * - Row 1: 145-char title, 52-char brand, 38-char compound city name, 58-char Polish seller name,
+ *          $24,995 price ($42,500 MSRP), 114" ceiling requirement, unbreakable 52-char spec token.
+ * - Row 2: Broken image URL (tests onError fallback), non-Latin/CJK/German diacritics,
+ *          $129,999 six-figure commercial bundle price, low 64/100 inspection score.
+ * - Row 3: Single-character / minimum-length values, $15 price, 0% savings, 1 mile distance.
+ */
+export const WORST_CASE_EQUIPMENT: EquipmentItem[] = [
+  {
+    id: 'wc-001',
+    title: 'Hammer Strength HD Athletic Perimeter 8-Station Commercial Modular Half-Rack & Dual Adjustable Pulley Cable Crossover Rig with Integrated Jammer Arms',
+    brand: 'Hammer Strength by Life Fitness Commercial Division',
+    model: 'HD-ATHLETIC-PERIMETER-8STA-MODULAR-PRO-2026-REV4B',
+    category: 'STRENGTH',
+    condition: 'USED_LIKE_NEW',
+    price: 24995,
+    originalMsrp: 42500,
+    savingsPercentage: 41,
+    yearManufactured: 2025,
+    location: {
+      city: 'Kleinfeltersville-Schwenksville',
+      state: 'PA',
+      zip: '19473-8842',
+      distanceMiles: 1284,
+    },
+    dimensions: {
+      lengthInches: 288,
+      widthInches: 144,
+      heightInches: 108,
+      weightLbs: 4850,
+    },
+    ceilingClearanceRequiredInches: 114,
+    images: [
+      'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=1200&q=80',
+    ],
+    inspectionScore: 99,
+    inspectionReport: {
+      frameIntegrity: 'EXCELLENT',
+      bearingSmoothness: 'LIKE_NEW',
+      cableTensionAndPulleys: 'NEW_CABLES',
+      upholsteryWear: 'PRISTINE',
+      rustCheck: 'ZERO_RUST',
+      safetyLocksAndPins: 'EXCELLENT',
+      certifiedTechNotes: 'Decommissioned from NCAA Division I collegiate weight room remodel. All 32 aircraft-grade 3/16" nylon-coated galvanized steel cables load-tested to 2,200 lbs.',
+      inspectionDate: '2026-10-19',
+    },
+    seller: {
+      id: 'sel-wc-01',
+      name: 'Aleksandra Wiśniewska-Kowalczyk Commercial Liquidations LLC',
+      type: 'CERTIFIED_PRO_DEALER',
+      rating: 4.98,
+      reviewsCount: 14209,
+      badges: ['NCAA Facility Liquidator', 'Bonded LTL Rigger', 'ISO-9001 Inspector'],
+    },
+    deliveryOptions: {
+      localPickup: true,
+      freightCurbsidePrice: 1450,
+      whiteGloveAssemblyAvailable: true,
+      whiteGlovePrice: 3200,
+    },
+    warranty: 'ClawExerMart 2-Year Commercial Structural & Cable Guarantee',
+    featured: true,
+    specs: {
+      'Factory Serial & Calibration Hash': 'HS-IWF-3085512-994021-SWEDEN-REV4B-CALIBRATED-2026',
+      'Upright Steel Tubing': '3" x 3" 7-Gauge Laser-Cut Structural Box Steel',
+      'Total Stack Weight': '2,400 lbs (8 x 300 lb precision-milled steel stacks)',
+      'Anchor Requirement': '16x Hilti KWIK Bolt TZ2 1/2" x 4-1/2" concrete wedge anchors',
+    },
+    description: 'Full institutional 8-station modular strength rig with dual adjustable pulleys, integrated iso-lateral jammer arms, multi-grip pull-up bridges, and stainless bar storage.',
+  },
+  {
+    id: 'wc-002',
+    title: 'Hantelscheiben-Großraumstation & 競技用パワーラック 250kg Calibrated Competition Bundle (Björn Borg Edition)',
+    brand: 'Eleiko Sport AB · Halmstad Sverige',
+    model: 'IWF-PL-COMP-250KG-SET',
+    category: 'FREE_WEIGHTS',
+    condition: 'USED_FAIR',
+    price: 129999,
+    originalMsrp: 185000,
+    savingsPercentage: 30,
+    yearManufactured: 2019,
+    location: {
+      city: 'Truth or Consequences',
+      state: 'NM',
+      zip: '87901',
+    },
+    dimensions: {
+      lengthInches: 180,
+      widthInches: 120,
+      heightInches: 98,
+      weightLbs: 9420,
+    },
+    ceilingClearanceRequiredInches: 106,
+    images: [
+      'https://invalid.example.test/broken-image-url-stress-test.jpg',
+    ],
+    inspectionScore: 64,
+    inspectionReport: {
+      frameIntegrity: 'PASS',
+      bearingSmoothness: 'PASS',
+      cableTensionAndPulleys: 'NA',
+      upholsteryWear: 'MINOR_BLEMISH',
+      rustCheck: 'SURFACE_PATINA_ONLY',
+      safetyLocksAndPins: 'PASS',
+      certifiedTechNotes: 'Full 12-platform Olympic training hall lot. Competition bumper plates calibrated within +/- 5 grams. Chalk residue and competition platform scuffing present.',
+      inspectionDate: '2026-08-30',
+    },
+    seller: {
+      id: 'sel-wc-02',
+      name: 'Jo',
+      type: 'VERIFIED_COMMUNITY',
+      rating: 5.0,
+      reviewsCount: 1,
+      badges: ['Verified'],
+    },
+    deliveryOptions: {
+      localPickup: false,
+      freightCurbsidePrice: 2890,
+      whiteGloveAssemblyAvailable: false,
+    },
+    warranty: 'ClawExerMart 30-Day Structural Guarantee',
+    featured: true,
+    specs: {
+      'Calibration Tolerance': '±0.05% IWF Competition Certified Chromed Cast Iron',
+      'Barbell Lot': '12x 20kg Men + 12x 15kg Women IWF Weightlifting Bars',
+    },
+    description: 'Complete national federation training hall liquidation lot including 12 competition platforms, 24 IWF needle-bearing barbells, and 3,000 kg of calibrated discs.',
+  },
+  {
+    id: 'wc-003',
+    title: 'Kettlebell',
+    brand: 'X',
+    model: '1',
+    category: 'ACCESSORIES',
+    condition: 'NEW',
+    price: 15,
+    originalMsrp: 15,
+    savingsPercentage: 0,
+    yearManufactured: 2026,
+    location: {
+      city: 'Ai',
+      state: 'OH',
+      zip: '43501',
+      distanceMiles: 1,
+    },
+    dimensions: {
+      lengthInches: 5,
+      widthInches: 5,
+      heightInches: 7,
+      weightLbs: 9,
+    },
+    ceilingClearanceRequiredInches: 24,
+    images: [
+      'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1200&q=80',
+    ],
+    inspectionScore: 100,
+    inspectionReport: {
+      frameIntegrity: 'EXCELLENT',
+      rustCheck: 'ZERO_RUST',
+      safetyLocksAndPins: 'EXCELLENT',
+      certifiedTechNotes: 'Single cast-iron casting.',
+      inspectionDate: '2026-10-24',
+    },
+    seller: {
+      id: 'sel-wc-03',
+      name: 'Bo',
+      type: 'VERIFIED_COMMUNITY',
+      rating: 4.0,
+      reviewsCount: 1,
+      badges: [],
+    },
+    deliveryOptions: {
+      localPickup: true,
+      freightCurbsidePrice: 0,
+      whiteGloveAssemblyAvailable: false,
+    },
+    warranty: 'None',
+    featured: false,
+    specs: {
+      'Weight': '4 kg',
+    },
+    description: 'Solid cast-iron training bell.',
+  },
+];
+
+export function getEquipmentDataset(mode: DatasetMode): EquipmentItem[] {
+  switch (mode) {
+    case 'worst':
+      return WORST_CASE_EQUIPMENT;
+    case 'single':
+      return [MOCK_EQUIPMENT[0]];
+    case 'empty':
+      return [];
+    case 'demo':
+    default:
+      return MOCK_EQUIPMENT;
+  }
+}

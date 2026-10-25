@@ -5,6 +5,7 @@ import { evaluateGymSpaceFit, RoomDimensions } from '../utils/spaceCalculator';
 import { Ruler, CheckCircle2, AlertTriangle, XCircle, ArrowUpRight, Home } from 'lucide-react';
 
 interface GymSpaceMatcherProps {
+  items?: EquipmentItem[];
   onSelectItem: (item: EquipmentItem) => void;
 }
 
@@ -15,12 +16,15 @@ const ROOM_PRESETS: { name: string; dims: RoomDimensions }[] = [
   { name: 'Commercial Studio (12ft Ceiling)', dims: { lengthFeet: 25, widthFeet: 30, ceilingHeightFeet: 12.0 } },
 ];
 
-export const GymSpaceMatcher: React.FC<GymSpaceMatcherProps> = ({ onSelectItem }) => {
+export const GymSpaceMatcher: React.FC<GymSpaceMatcherProps> = ({
+  items = MOCK_EQUIPMENT,
+  onSelectItem,
+}) => {
   const [room, setRoom] = useState<RoomDimensions>(ROOM_PRESETS[0].dims);
   const [filterCategory, setFilterCategory] = useState<string>('ALL');
 
   const evaluations = useMemo(() => {
-    return MOCK_EQUIPMENT.map((item) => {
+    return items.map((item) => {
       const assessment = evaluateGymSpaceFit(
         room,
         item.dimensions,
@@ -31,7 +35,7 @@ export const GymSpaceMatcher: React.FC<GymSpaceMatcherProps> = ({ onSelectItem }
       if (filterCategory !== 'ALL' && item.category !== filterCategory) return false;
       return true;
     });
-  }, [room, filterCategory]);
+  }, [items, room, filterCategory]);
 
   const fitsCount = evaluations.filter((e) => e.assessment.status === 'FITS_PERFECTLY').length;
   const tightCount = evaluations.filter((e) => e.assessment.status === 'TIGHT_CLEARANCE').length;
@@ -105,7 +109,7 @@ export const GymSpaceMatcher: React.FC<GymSpaceMatcherProps> = ({ onSelectItem }
         </div>
 
         {/* Sliders Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 tabular-nums">
           {/* Ceiling Height */}
           <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">
             <div className="flex justify-between text-xs font-semibold">
@@ -176,8 +180,8 @@ export const GymSpaceMatcher: React.FC<GymSpaceMatcherProps> = ({ onSelectItem }
         </div>
 
         {/* Fit Summary Pills */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800 text-xs">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800 text-xs tabular-nums">
+          <div className="flex flex-wrap items-center gap-3">
             <span className="inline-flex items-center gap-1.5 text-emerald-400 font-semibold bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
               <CheckCircle2 className="w-3.5 h-3.5" />
               {fitsCount} Fits Ample
@@ -218,13 +222,16 @@ export const GymSpaceMatcher: React.FC<GymSpaceMatcherProps> = ({ onSelectItem }
                   : 'border-rose-500/30 opacity-75'
               }`}
             >
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider">
+                  <span
+                    title={item.brand}
+                    className="text-[11px] font-bold text-amber-400 uppercase tracking-wider truncate"
+                  >
                     {item.brand}
                   </span>
                   <span
-                    className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border ${
+                    className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border whitespace-nowrap flex-shrink-0 ${
                       isFit
                         ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
                         : isTight
@@ -239,10 +246,12 @@ export const GymSpaceMatcher: React.FC<GymSpaceMatcherProps> = ({ onSelectItem }
                   </span>
                 </div>
 
-                <h3 className="text-sm font-bold text-white line-clamp-1">{item.title}</h3>
+                <h3 title={item.title} className="text-sm font-bold text-white line-clamp-2">
+                  {item.title}
+                </h3>
 
                 {/* Dimension Metric Badges */}
-                <div className="mt-3 grid grid-cols-2 gap-2 text-[11px]">
+                <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] tabular-nums">
                   <div className="p-2 rounded-xl bg-slate-950/60 border border-slate-800">
                     <span className="text-slate-500 block">Required Height</span>
                     <span className="font-semibold text-white">{item.ceilingClearanceRequiredInches}" overhead</span>
@@ -268,7 +277,7 @@ export const GymSpaceMatcher: React.FC<GymSpaceMatcherProps> = ({ onSelectItem }
                 <p className="text-xs text-slate-400 mt-3 leading-relaxed">{assessment.notes}</p>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+              <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs tabular-nums">
                 <span className="font-bold text-white">${item.price.toLocaleString()}</span>
                 <span className="text-amber-400 font-semibold flex items-center gap-1 group-hover:underline">
                   Inspect Specs

@@ -12,7 +12,7 @@ export const ConditionBadge: React.FC<ConditionBadgeProps> = ({ condition, class
       return (
         <span
           data-testid="badge-condition-new"
-          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 ${className}`}
+          className={`inline-flex items-center whitespace-nowrap flex-shrink-0 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/35 backdrop-blur-md shadow-sm ${className}`}
         >
           ● Brand New
         </span>
@@ -21,7 +21,7 @@ export const ConditionBadge: React.FC<ConditionBadgeProps> = ({ condition, class
       return (
         <span
           data-testid="badge-condition-refurbished"
-          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 ${className}`}
+          className={`inline-flex items-center whitespace-nowrap flex-shrink-0 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/35 backdrop-blur-md shadow-sm ${className}`}
         >
           ★ Certified Refurbished
         </span>
@@ -30,7 +30,7 @@ export const ConditionBadge: React.FC<ConditionBadgeProps> = ({ condition, class
       return (
         <span
           data-testid="badge-condition-like-new"
-          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/15 text-blue-400 border border-blue-500/30 ${className}`}
+          className={`inline-flex items-center whitespace-nowrap flex-shrink-0 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-300 border border-blue-500/35 backdrop-blur-md shadow-sm ${className}`}
         >
           Pre-Owned · Like New
         </span>
@@ -39,7 +39,7 @@ export const ConditionBadge: React.FC<ConditionBadgeProps> = ({ condition, class
       return (
         <span
           data-testid="badge-condition-good"
-          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-400 border border-amber-500/30 ${className}`}
+          className={`inline-flex items-center whitespace-nowrap flex-shrink-0 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/35 backdrop-blur-md shadow-sm ${className}`}
         >
           Pre-Owned · Good
         </span>
@@ -48,7 +48,7 @@ export const ConditionBadge: React.FC<ConditionBadgeProps> = ({ condition, class
       return (
         <span
           data-testid="badge-condition-fair"
-          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-stone-500/20 text-stone-300 border border-stone-500/40 ${className}`}
+          className={`inline-flex items-center whitespace-nowrap flex-shrink-0 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-stone-500/25 text-stone-200 border border-stone-500/40 backdrop-blur-md shadow-sm ${className}`}
         >
           Pre-Owned · Fair
         </span>
@@ -65,16 +65,16 @@ export const ScoreBadge: React.FC<{ score: number; className?: string }> = ({ sc
   return (
     <span
       data-testid="badge-inspection-score"
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border ${
+      className={`inline-flex items-center whitespace-nowrap flex-shrink-0 gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border backdrop-blur-md shadow-sm ${
         isPerfect
-          ? 'bg-emerald-950/40 text-emerald-300 border-emerald-500/30'
+          ? 'bg-emerald-950/75 text-emerald-300 border-emerald-500/40'
           : isHigh
-          ? 'bg-amber-950/40 text-amber-300 border-amber-500/30'
-          : 'bg-slate-800 text-slate-300 border-slate-700'
+          ? 'bg-amber-950/75 text-amber-300 border-amber-500/40'
+          : 'bg-slate-900/85 text-slate-200 border-slate-700'
       } ${className}`}
     >
-      <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
-      {score}/100 Inspected
+      <span className="w-1.5 h-1.5 rounded-full bg-current flex-shrink-0"></span>
+      <span className="tabular-nums">{score}/100</span> Inspected
     </span>
   );
 };

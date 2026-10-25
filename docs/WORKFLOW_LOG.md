@@ -126,3 +126,22 @@ This document records the architectural thought process, alternatives considered
 2. **Areas for Improvement**:
    - In future sprints, automated visual regression comparison (pixel diffing `captures/` against locked baselines using tools like Pixelmatch or Percy) could be integrated directly into the CI script.
    - The Valuation Engine could incorporate a live mock REST API / GraphQL endpoint to demonstrate multi-service integration testing via Karate DSL.
+
+
+---
+
+## 🧪 Phase 7: Adversarial `break-ui` Stress Audit & Visual Critic Remediation
+
+- **Thought Process**:
+  - Upon forensic inspection of `captures/R2_catalog.png` and comparison with `RawExerMart`, we identified that the top-left badge wrapper on `EquipmentCard.tsx` used `flex-wrap` (horizontal row), allowing the `Save 30%` pill to collide with the top-right `98/100 Inspected` badge. Furthermore, `R1_navbar.png` and `R2_catalog.png` were captured at the same scroll offset (`scrollY = 0`).
+  - Applying the SeikoClaw `break-ui` skill, we constructed `WORST_CASE_EQUIPMENT` in `src/data/mockEquipment.ts` and wired a live bottom-center dataset switcher (`src/components/BreakUiToggle.tsx`) supporting `Demo data`, `Worst case`, `1 item`, and `Empty` modes (with `?data=` URL persistence).
+- **Defects Uncovered & Remediated**:
+  1. **Unbounded `$5,000+` slider ceiling (`Catalog.tsx`)**: Initial `maxPrice: 5000` filtered out commercial lots priced above `$5,000` (`$24,995` and `$129,999`). Updated filter logic so `maxPrice === 5000` represents an unbounded `$5,000+` ceiling.
+  2. **Badge overlap (`EquipmentCard.tsx`, `Badge.tsx`)**: Stacked top-left condition and savings badges vertically (`flex-col items-start gap-1.5 max-w-[58%]`) with `whitespace-nowrap flex-shrink-0`.
+  3. **Broken image resilience (`EquipmentCard.tsx`, `ProductDetailModal.tsx`)**: Added `onError` state fallback rendering a structured `Verified Equipment Photo Pending` surface when an image URL fails.
+  4. **Long string & six-figure number overflow (`EquipmentCard.tsx`, `ProductDetailModal.tsx`)**: Added `tabular-nums`, `min-w-0`, `truncate` with `title` tooltips, and `break-all sm:break-words` for 52-character serial hashes and compound municipality names.
+  5. **Singular pluralization (`Catalog.tsx`)**: Fixed `"1 Equipment Listings Found"` to `"1 Equipment Listing Found"` under the `1 item` toggle state.
+- **Verification**:
+  - Added `src/test/BreakUi.test.tsx` (all 9 test suites / 23 tests passing).
+  - Added `.github/workflows/ci.yml` for continuous verification on push and PR.
+  - Updated `scripts/run-e2e.mjs` to scroll `[data-testid="catalog-grid"]` into view for `R2_catalog.png` and capture `R7_break_ui_stress.png` under worst-case stress mode.

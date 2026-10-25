@@ -6,6 +6,7 @@ import { FilterSidebar } from './FilterSidebar';
 import { Search, Sparkles, Tag, ShieldCheck, ArrowDownUp } from 'lucide-react';
 
 interface CatalogProps {
+  items?: EquipmentItem[];
   onSelectItem: (item: EquipmentItem) => void;
   onNavigateSell: () => void;
   onNavigateSpace: () => void;
@@ -22,20 +23,21 @@ const INITIAL_FILTERS: CatalogFilterState = {
 };
 
 export const Catalog: React.FC<CatalogProps> = ({
+  items = MOCK_EQUIPMENT,
   onSelectItem,
   onNavigateSell,
   onNavigateSpace,
 }) => {
   const [filters, setFilters] = useState<CatalogFilterState>(INITIAL_FILTERS);
 
-  // Extract unique brands
+  // Extract unique brands from active dataset
   const brands = useMemo(() => {
-    return Array.from(new Set(MOCK_EQUIPMENT.map((i) => i.brand))).sort();
-  }, []);
+    return Array.from(new Set(items.map((i) => i.brand))).sort();
+  }, [items]);
 
   // Filter and sort items
   const filteredItems = useMemo(() => {
-    return MOCK_EQUIPMENT.filter((item) => {
+    return items.filter((item) => {
       // Search
       if (filters.searchQuery.trim()) {
         const query = filters.searchQuery.toLowerCase();
@@ -66,8 +68,8 @@ export const Catalog: React.FC<CatalogProps> = ({
         return false;
       }
 
-      // Price
-      if (item.price > filters.maxPrice) {
+      // Price ($5,000 slider top represents "$5,000+" unbounded ceiling)
+      if (filters.maxPrice < 5000 && item.price > filters.maxPrice) {
         return false;
       }
 
@@ -80,7 +82,7 @@ export const Catalog: React.FC<CatalogProps> = ({
       // Default: featured
       return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
     });
-  }, [filters]);
+  }, [items, filters]);
 
   const newCount = filteredItems.filter((i) => i.condition === 'NEW').length;
   const usedCount = filteredItems.filter((i) => i.condition !== 'NEW').length;
@@ -167,10 +169,10 @@ export const Catalog: React.FC<CatalogProps> = ({
       </div>
 
       {/* Result Count and Quick Filter Pills */}
-      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400 px-1">
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400 px-1 tabular-nums">
         <div className="flex items-center gap-2">
           <span data-testid="results-count" className="font-semibold text-slate-200">
-            {filteredItems.length} Equipment Listings Found
+            {filteredItems.length} {filteredItems.length === 1 ? 'Equipment Listing' : 'Equipment Listings'} Found
           </span>
           <span className="text-slate-600">|</span>
           <span className="text-emerald-400 font-medium">{newCount} Brand New</span>
@@ -194,7 +196,7 @@ export const Catalog: React.FC<CatalogProps> = ({
         />
 
         {/* Catalog Grid */}
-        <div className="flex-1 w-full">
+        <div className="flex-1 w-full min-w-0">
           {filteredItems.length === 0 ? (
             <div
               data-testid="catalog-empty-state"
